@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamentos - Beleza & Cia</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+    <!-- Sidebar injected by js/sidebar.js -->
+
+    <main>
+        <div class="container">
+            <header class="section-header">
+                <div>
+                    <h1>Agendamentos</h1>
+                    <p style="color: var(--text-secondary);">Gerencie todos os horários do salão.</p>
+                </div>
+                <button id="btnNovoAgendamento" class="btn btn-primary">
+                    + Novo Agendamento
+                </button>
+            </header>
+
+            <div class="card">
+                <!-- Filters could go here -->
+
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Cliente</th>
+                                <th>Profissional</th>
+                                <th>Serviço</th>
+                                <th>Status</th>
+                                <th class="table-actions-header">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="agendamentosTable">
+                            <!-- JS loads rows here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Novo Agendamento -->
+    <div id="modalAgendamento" class="hidden"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+        <div class="card" style="width: 100%; max-width: 500px;">
+            <div class="flex justify-between items-center mb-4">
+                <h2>Novo Agendamento</h2>
+                <button id="btnFecharModal"
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+
+            <form id="formAgendamento">
+                <div class="form-group">
+                    <label class="form-label">Cliente</label>
+                    <input type="text" id="clienteNome" class="form-control" placeholder="Nome do cliente" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Serviço</label>
+                    <select id="servicoSelect" class="form-control" required>
+                        <option value="">Selecione um serviço</option>
+                        <!-- Loaded via JS -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Profissional</label>
+                    <select id="profissionalSelect" class="form-control" required>
+                        <option value="">Selecione um profissional</option>
+                        <!-- Loaded via JS -->
+                    </select>
+                </div>
+
+                <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label class="form-label">Data</label>
+                        <input type="date" id="dataAgendamento" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Horário</label>
+                        <input type="time" id="horaAgendamento" class="form-control" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-full mt-4">Confirmar Agendamento</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="js/agendamento.js"></script>
+</body>
+
+</html>
