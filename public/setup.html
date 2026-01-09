@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Setup Admin - Beleza & Cia</title>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body style="display: flex; justify-content: center; align-items: center; min-height: 100vh;">
+    <div class="card" style="width: 100%; max-width: 400px; padding: 2rem;">
+        <h2 style="margin-bottom: 1.5rem; text-align: center;">Criar Administrador</h2>
+
+        <form id="setupForm">
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" id="email" class="form-control" value="admin@beleza.com" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Senha</label>
+                <input type="password" id="password" class="form-control" value="123456" required>
+            </div>
+
+            <div id="message" style="margin: 1rem 0; color: var(--text-secondary); text-align: center;"></div>
+
+            <button type="submit" class="btn btn-primary w-full">Criar Admin e Login</button>
+        </form>
+
+        <div style="margin-top: 1rem; text-align: center;">
+            <a href="index.html" style="color: var(--primary-color);">Voltar para Login</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { auth, db } from './js/firebase.js';
+        import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const form = document.getElementById('setupForm');
+        const msg = document.getElementById('message');
+
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const btn = form.querySelector('button');
+
+            try {
+                btn.disabled = true;
+                btn.textContent = 'Criando...';
+                msg.textContent = '';
+                msg.style.color = 'var(--text-secondary)';
+
+                // 1. Create Auth User
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 2. Create Firestore Admin Doc
+                await setDoc(doc(db, "users", user.uid), {
+                    nome: "Administrador",
+                    email: email,
+                    role: "admin",
+                    criadoEm: serverTimestamp()
+                });
+
+                msg.style.color = 'green';
+                msg.textContent = 'Sucesso! Admin criado. Redirecionando...';
+
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error(error);
+                btn.disabled = false;
+                btn.textContent = 'Criar Admin e Login';
+                msg.style.color = 'red';
+
+                if (error.code === 'auth/email-already-in-use') {
+                    msg.textContent = 'Erro: Este email já existe. Tente fazer login ou use outro.';
+                } else {
+                    msg.textContent = 'Erro: ' + error.message;
+                }
+            }
+        };
+    </script>
+</body>
+
+</html>

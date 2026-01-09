@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check authentication
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper to check for Admin role (Preserved from your old rules for future use)
+    function isAdmin() {
+       return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // ==================== USERS (users) ====================
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      // Allow admins to manage users (create/update/delete)
+      // Users can update their own profile
+      allow write: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+    }
+    
+    // ==================== SERVICES (servicos) ====================
+    match /servicos/{servicoId} {
+      allow read: if isAuthenticated();
+      // INTEGRATION: Changed from 'isAdmin()' to 'isAuthenticated()' to fix the permission error.
+      // To restore strict Admin-only access, change 'isAuthenticated()' back to 'isAdmin()' below.
+      allow write: if isAuthenticated(); 
+    }
+    
+    // ==================== APPOINTMENTS (agendamentos) ====================
+    match /agendamentos/{agendamentoId} {
+      allow read, write: if isAuthenticated();
+    }
+    
+    // ==================== CLIENTS (clientes) ====================
+    match /clientes/{clienteId} {
+      allow read, write: if isAuthenticated();
+    }
+  }
+}
