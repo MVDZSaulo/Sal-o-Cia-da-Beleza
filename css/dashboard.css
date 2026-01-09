@@ -1,0 +1,38 @@
+body {
+  font-family: Arial;
+  margin: 0;
+  background: #fce4ec;
+}
+
+header {
+  background: #c2185b;
+  color: #fff;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+section {
+  background: #fff;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+input, button {
+  padding: 8px;
+  margin: 5px 0;
+  width: 100%;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 8px;
+  background: #f5f5f5;
+  margin-top: 5px;
+  border-radius: 5px;
+}
